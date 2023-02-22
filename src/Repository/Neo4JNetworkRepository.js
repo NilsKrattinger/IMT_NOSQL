@@ -58,9 +58,7 @@ async function getSalesProductByNetwork(userName) {
     async function getUserCount() {
         const start = Date.now();
         try {
-            const result = await session.run('MATCH (n:Person) RETURN COUNT(n)',
-                {product_name:productName,circle_size:circleSize}
-            )
+            const result = await session.run('MATCH (n:Person) RETURN COUNT(n)')
             const duration = Date.now() - start;
             let returnValue = {}
             returnValue["Duration"] = duration;
@@ -76,9 +74,7 @@ async function getSalesProductByNetwork(userName) {
     async function getProductCount() {
         const start = Date.now();
         try {
-            const result = await session.run('MATCH (n:Product) RETURN COUNT(n)',
-                {product_name:productName,circle_size:circleSize}
-            )
+            const result = await session.run('MATCH (n:Product) RETURN COUNT(n)')
             const duration = Date.now() - start;
             let returnValue = {}
             returnValue["Duration"] = duration;
@@ -94,9 +90,7 @@ async function getSalesProductByNetwork(userName) {
     async function getFollowersCount() {
         const start = Date.now();
         try {
-            const result = await session.run('MATCH (:Person)-[r:followedBy]->(:Person) RETURN COUNT(r)',
-                {product_name:productName,circle_size:circleSize}
-            )
+            const result = await session.run('MATCH (:Person)-[r:followedBy]->(:Person) RETURN COUNT(r)')
             const duration = Date.now() - start;
             let returnValue = {}
             returnValue["Duration"] = duration;
@@ -112,9 +106,7 @@ async function getSalesProductByNetwork(userName) {
     async function getPurchasedCount() {
         const start = Date.now();
         try {
-            const result = await session.run('MATCH (:Person)-[r:havePurchased]->(:Product) RETURN COUNT(r)',
-                {product_name:productName,circle_size:circleSize}
-            )
+            const result = await session.run('MATCH (:Person)-[r:havePurchased]->(:Product) RETURN COUNT(r)')
             const duration = Date.now() - start;
             let returnValue = {}
             returnValue["Duration"] = duration;
