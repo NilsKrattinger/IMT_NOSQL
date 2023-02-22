@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mt-3 mb-5">No SQL HMI</h1>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="col-12">
+                <h2>Controls</h2>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-5 card-body">
+            <div class="col-md-12 text-center">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button id="request1" class="btn btn-primary">request 1</button>
+                    <button id="request2" class="btn btn-primary">request 2</button>
+                    <button id="request3" class="btn btn-primary">request 3</button>
+                    <button id="AddUsers" class="btn btn-warning">Add user</button>
+                    <button id="AddProduct" class="btn btn-warning ">Add products</button>
+                    <button id="DeleteAll" class="btn btn-danger ">Delete All content</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-6" id="relational">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class=".text-center"><h3>Relational</h3></div>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3">
+                            <p>User count :</p>
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <p>Followers count :</p>
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <p>Products count :</p>
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <p>Purchases count :</p>
+                        </div>
+                    </div>
+                </div>
+                    <div class="card-body">
+
+                        <table class="table">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6" id="graph">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class=".text-center"><h3>Graph</h3></div>
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3">
+                                <p id="graphUserCount">User count :</p>
+                            </div>
+                            <div class="col-sm-3 col-md-3">
+                                <p id="graphFollowCount">Followers count :</p>
+                            </div>
+                            <div class="col-sm-3 col-md-3">
+                                <p id="graphProduceCount">Products count :</p>
+                            </div>
+                            <div class="col-sm-3 col-md-3">
+                                <p id="graphPurchasesCount">Purchases count :</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" >
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+<script src="http://localhost:8080/static/scripts/UpdateDbStatus.js"></script>
+</body>
+</html>
