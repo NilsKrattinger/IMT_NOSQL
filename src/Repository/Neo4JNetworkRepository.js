@@ -123,5 +123,9 @@ async function getSalesProductByNetwork(userName) {
     module.exports = {
         getSalesProductByNetwork: getSalesProductByNetwork,
         getSaleForProductByNetwork: getSaleForProductByNetwork,
-        getProductVirality: getProductVirality
+        getProductVirality: getProductVirality,
+        getUserCount:getUserCount,
+        getProductCount:getProductCount,
+        getPurchasedCount:getPurchasedCount,
+        getFollowersCount:getFollowersCount
     }

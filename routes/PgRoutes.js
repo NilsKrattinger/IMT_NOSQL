@@ -1,6 +1,9 @@
 const express = require('express');
 const {createSchema, populateFollowers, populateProducts} = require("../src/utils/pg-utils");
 const router = express.Router();
+const repo = require('../src/Repository/PgSqlNetworkRepository')
+const network = require('../src/model/Network')
+const common = require('../src/model/Common')
 
 router.post('/createSchema', async (req, res) => {
     try {
@@ -47,15 +50,11 @@ router.post('/populateProducts', async (req, res) => {
 });
 
 
-router.get('/productSalesFromNetwork', async (req, res) => {
+router.get('/productSalesFromNetwork/:userName', async (req, res) => {
     try {
-        const start = Date.now();
-
-
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const userName = req.params.userName
+        const rep = await network.getSalesProductByNetwork(repo,userName)
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error getting', err);
         res.status(500).send('Error populating products table.');
@@ -63,7 +62,7 @@ router.get('/productSalesFromNetwork', async (req, res) => {
 });
 
 
-router.get('/specificProductSaleFromNetwork', async (req, res) => {
+router.get('/specificProductSaleFromNetwork/:userName/:productName', async (req, res) => {
     try {
         const start = Date.now();
 
@@ -97,13 +96,8 @@ router.get('/productVirality', async (req, res) => {
 
 router.get('/userCount', async (req, res) => {
     try {
-        const start = Date.now();
-
-
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const rep = await common.getUserCount(repo)
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error getting', err);
         res.status(500).send('Error populating products table.');
@@ -113,13 +107,8 @@ router.get('/userCount', async (req, res) => {
 
 router.get('/productCount', async (req, res) => {
     try {
-        const start = Date.now();
-
-
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const rep = await common.getProductCount(repo)
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error getting', err);
         res.status(500).send('Error populating products table.');
@@ -129,13 +118,8 @@ router.get('/productCount', async (req, res) => {
 
 router.get('/purchaseCount', async (req, res) => {
     try {
-        const start = Date.now();
-
-
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const rep = await common.getPurchasedCount(repo)
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error getting', err);
         res.status(500).send('Error populating products table.');
@@ -145,13 +129,8 @@ router.get('/purchaseCount', async (req, res) => {
 
 router.get('/followersCount', async (req, res) => {
     try {
-        const start = Date.now();
-
-
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const rep = await common.getFollowersCount(repo)
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error getting', err);
         res.status(500).send('Error populating products table.');
