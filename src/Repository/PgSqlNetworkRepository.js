@@ -83,9 +83,62 @@ async function getProductVirality(productName) {
     return returnValue;
 }
 
+async function getUserCount() {
+    const start = Date.now();
+    const result = await pgPool.query(`
+        SELECT count(*) from users;
+    `);
+    const duration = Date.now() - start;
+    let returnValue = {}
+    returnValue["Duration"] = duration;
+    returnValue["Data"] = result;
+    return returnValue;
+}
+
+async function getProductCount() {
+    const start = Date.now();
+    const result = await pgPool.query(`
+        SELECT count(*) from products;
+    `);
+    const duration = Date.now() - start;
+    let returnValue = {}
+    returnValue["Duration"] = duration;
+    returnValue["Data"] = result;
+    return returnValue;
+}
+
+
+async function getFollowersCount() {
+    const start = Date.now();
+    const result = await pgPool.query(`
+        SELECT count(*) from followers;
+    `);
+    const duration = Date.now() - start;
+    let returnValue = {}
+    returnValue["Duration"] = duration;
+    returnValue["Data"] = result;
+    return returnValue;
+}
+
+async function getPurchasedCount() {
+    const start = Date.now();
+    const result = await pgPool.query(`
+        SELECT count(*) from purchases;
+    `);
+    const duration = Date.now() - start;
+    let returnValue = {}
+    returnValue["Duration"] = duration;
+    returnValue["Data"] = result;
+    return returnValue;
+}
+
 
 module.exports = {
     getSalesProductByNetwork: getSalesProductByNetwork,
     getSaleForProductByNetwork: getSaleForProductByNetwork,
-    getProductVirality:getProductVirality
+    getProductVirality:getProductVirality,
+    getUserCount:getUserCount,
+    getProductCount:getProductCount,
+    getPurchasedCount:getPurchasedCount,
+    getFollowersCount:getFollowersCount
 }

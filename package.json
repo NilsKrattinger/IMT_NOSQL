@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/NilsKrattinger/IMT_NOSQL#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "neo4j-driver": "^5.5.0",
     "pg": "^8.9.0"
