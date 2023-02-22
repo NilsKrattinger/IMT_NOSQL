@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 // Import the functions we created earlier
-const { createSchema, populateUsers, populateFollowers, populateProducts, populatePurchases } = require('./db-utils');
+const { createSchema, populateUsers, populateFollowers, populateProducts, populatePurchases } = require('./src/utils/pg-utils');
 const {Pool} = require("pg");
 
 

@@ -1,18 +1,8 @@
-const {Pool} = require('pg');
-
-
-// Create a new pool for connecting to PostgreSQL
-const pool = new Pool({
-    user: "postgres",
-    host: "database",
-    database: "nosql",
-    password: "postgres",
-    port: "5432",
-});
+const {pgPool} = require('../provider/Pg-sql')
 
 // Function to create the schema
 async function createSchema() {
-    await pool.query(`
+    await pgPool.query(`
         CREATE TABLE IF NOT EXISTS users
         (
             id   SERIAL PRIMARY KEY,

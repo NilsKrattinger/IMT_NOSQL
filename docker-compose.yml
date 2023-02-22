@@ -15,6 +15,14 @@ services:
   database:
     image: postgres
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: '8G'
+        reservations:
+          cpus: '1'
+          memory: '1G'
     volumes:
       - devdb:/var/lib/postgresql/data
     networks:
@@ -29,6 +37,15 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  neo4j:
+    image: bitnami/neo4j:latest
+    networks:
+      - devnet
+    ports:
+      - '7474:7474'
+      - '7473:7473'
+      - '7687:7687'
 
 volumes:
   devdb:

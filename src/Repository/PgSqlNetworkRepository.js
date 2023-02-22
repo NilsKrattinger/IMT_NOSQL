@@ -1,4 +1,4 @@
-const {pgPool} = require('../../provider/Pg-sql')
+const {pgPool} = require('../provider/Pg-sql')
 
 
 async function getSalesProductByNetwork(userId) {
