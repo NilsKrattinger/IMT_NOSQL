@@ -1,7 +1,6 @@
 const neo4j = require('neo4j-driver')
 
-const driver = neo4j.driver('localhost', neo4j.auth.basic('neo4J', 'neo4J'))
-const session = driver.session()
+const driver = neo4j.driver('bolt://neo4j:7687', neo4j.auth.basic('neo4j', 'neo4jneo4j'))
 
 
-module.exports.session = session;
+module.exports.driver = driver;

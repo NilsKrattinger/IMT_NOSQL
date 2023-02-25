@@ -7,11 +7,18 @@ app.use(cors('*'));
 app.use('/static',express.static('public'))
 
 // Import the functions we created earlier
-const neoRoutes = require('./routes/NeoRoutes')
-app.use('/graph',neoRoutes);
+const neoRoute = require('./routes/NeoRoutes')
+const pgRoute = require('./routes/PgRoutes')
 
-const pgRoutes = require('./routes/PgRoutes')
-app.use('/pg',pgRoutes);
+
+app.use('/graph',neoRoute);
+
+app.use('/pg',pgRoute);
+
+
+app.get('/heal-check', (req,res) => {
+    res.sendStatus(200)
+});
 
 app.listen(8080, () => {
     console.log('Server started on port 8080.');

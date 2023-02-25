@@ -1,5 +1,5 @@
 const {pgPool} = require('../provider/Pg-sql')
-
+const utils = require('../utils/pg-utils')
 
 async function getSalesProductByNetwork(userId) {
     const start = Date.now();
@@ -24,7 +24,7 @@ async function getSalesProductByNetwork(userId) {
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
-    returnValue["Data"] = result;
+    returnValue["Data"] = utils.parseRes(result);
     return returnValue;
 }
 
@@ -53,7 +53,7 @@ async function getSaleForProductByNetwork(userId, productName) {
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
-    returnValue["Data"] = result;
+    returnValue["Data"] = utils.parseRes(result);
     return returnValue;
 }
 
@@ -79,7 +79,7 @@ async function getProductVirality(productName) {
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
-    returnValue["Data"] = result;
+    returnValue["Data"] = utils.parseRes(result);
     return returnValue;
 }
 
@@ -91,7 +91,7 @@ async function getUserCount() {
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
-    returnValue["Data"] = result;
+    returnValue["Data"] = utils.parseRes(result);
     return returnValue;
 }
 
@@ -103,7 +103,7 @@ async function getProductCount() {
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
-    returnValue["Data"] = result;
+    returnValue["Data"] = utils.parseRes(result);
     return returnValue;
 }
 
@@ -116,7 +116,7 @@ async function getFollowersCount() {
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
-    returnValue["Data"] = result;
+    returnValue["Data"] = utils.parseRes(result);
     return returnValue;
 }
 
@@ -128,7 +128,7 @@ async function getPurchasedCount() {
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
-    returnValue["Data"] = result;
+    returnValue["Data"] = utils.parseRes(result);
     return returnValue;
 }
 

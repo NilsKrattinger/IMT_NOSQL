@@ -5,19 +5,6 @@ const repo = require('../src/Repository/PgSqlNetworkRepository')
 const network = require('../src/model/Network')
 const common = require('../src/model/Common')
 
-router.post('/createSchema', async (req, res) => {
-    try {
-        const start = Date.now();
-        await createSchema();
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200);
-    } catch (err) {
-        console.error('Error creating schema:', err);
-        res.status(500).send('Error creating schema.');
-    }
-});
-
 // Route to populate the followers table
 router.post('/populateUsers', async (req, res) => {
     try {
@@ -64,13 +51,11 @@ router.get('/productSalesFromNetwork/:userName', async (req, res) => {
 
 router.get('/specificProductSaleFromNetwork/:userName/:productName', async (req, res) => {
     try {
-        const start = Date.now();
+        const userName = req.params.userName
+        const productName = req.params.productName
 
-
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const rep = await network.getSalesProductByNetwork(repo,userName,productName)
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error getting', err);
         res.status(500).send('Error populating products table.');
@@ -78,15 +63,11 @@ router.get('/specificProductSaleFromNetwork/:userName/:productName', async (req,
 });
 
 
-router.get('/productVirality', async (req, res) => {
+router.get('/productVirality/:productName', async (req, res) => {
     try {
-        const start = Date.now();
-
-
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const productName = req.params.productName
+        const rep = await network.getProductVirality(repo,productName)
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error getting', err);
         res.status(500).send('Error populating products table.');

@@ -1,5 +1,6 @@
 const {pgPool} = require('../provider/Pg-sql')
 
+const type = 'Pg';
 // Function to create the schema
 async function createSchema() {
     await pgPool.query(`
@@ -110,4 +111,23 @@ async function populatePurchases() {
     }
 }
 
-module.exports = {createSchema, populateUsers, populateProducts, populateFollowers, populatePurchases}
+
+function parseRes(res){
+    const rows = res.rows;
+    const parsedRes = []
+
+    for (const rowsKey in rows) {
+        const row = rows[rowsKey]
+        const parsedObj= {}
+        for (const field in row) {
+            parsedObj[field] = row[field]
+        }
+        parsedRes.push(parsedObj)
+    }
+
+    console.log(parsedRes)
+    return parsedRes
+}
+
+
+module.exports = {createSchema, populateUsers, populateProducts, populateFollowers, populatePurchases,parseRes,type}

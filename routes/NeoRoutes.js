@@ -1,7 +1,7 @@
 const express = require('express');
 const {populateUsers} = require("../src/utils/pg-utils");
 const common = require("../src/model/Common");
-const repo = require("../src/Repository/PgSqlNetworkRepository");
+const repo = require("../src/Repository/Neo4JNetworkRepository");
 const router = express.Router();
 
 router.get('/populateProducts', function(req, res) {
@@ -14,7 +14,7 @@ res.send('Birds home page');
 router.get('/populate-users', async (req, res) => {
     try {
         const start = Date.now();
-        await populateUsers(10);
+        await populateUsers(10);PgSqlNetworkRepository
         const duration = Date.now() - start;
         res.set('X-Request-Duration', `${duration}ms`);
         res.sendStatus(200)

@@ -1,117 +1,120 @@
-class updatableElement {
-    constructor(ElementId, url, freq) {
-        this.element = document.getElementById(ElementId);
-        this.url = url;
-        this.freq = freq;
-        this.setUpUpdate()
-        this.update(this)
-    }
+const Elements = {
+    btn_query_1: document.getElementById('request1'),
+    btn_query_2: document.getElementById('request2'),
+    btn_query_3: document.getElementById('request3'),
+    btn_add_user: document.getElementById('AddUsers'),
+    btn_add_product: document.getElementById('AddProduct'),
+    btn_delete_all: document.getElementById('DeleteAll'),
+    btn_random_user: document.getElementById('RandomUserID'),
+    btn_random_product: document.getElementById('RandomProductID'),
+    field_userIDGraph: document.getElementById('GraphUserId'),
+    field_userIDRelational: document.getElementById('RelationalUserId'),
+    field_productIdGraph: document.getElementById('GraphProductId'),
+    field_productIdRelational: document.getElementById('RelationalProductId'),
+    field_batchSize: document.getElementById('batchSize'),
+    field_inputNumber: document.getElementById('NumberToInsert'),
+    graph_queryTime: document.getElementById('GraphResponseTime'),
 
-    async update(obj) {
-        obj.element.innerHTML = await obj.fetchData(obj)
-    }
-
-    async fetchData(obj) {
-        const response = await fetch(obj.url);
-        const responseObj = await response.json()
-        return responseObj.Data[0].count;
-
-    }
-
-    setUpUpdate() {
-        const obj = this
-        window.addEventListener('load', function () {
-            setInterval(() => {
-                obj.update(obj)
-            }, 10000);
-        });
-    }
 }
 
-const btn = {
-    request1: document.getElementById('request1'),
-    request2: document.getElementById('request2'),
-    request3: document.getElementById('request3'),
-    addUser: document.getElementById('AddUsers'),
-    addProduct: document.getElementById('AddProduct'),
-    DeleteAll: document.getElementById('DeleteAll'),
+const tableDetails = {
+    'pg-table': {
+        'color': '#27b1be',
+        'time': document.getElementById('RelationalResponseTime')
+    },
+    'gaph-table': {
+        'color': '#d9ae0d',
+        'time': document.getElementById('GraphResponseTime')
+    },
 }
 
-const graph = {
-    userCount: new updatableElement('graphUserCount', 'http://localhost:8080/graph/userCount', 10000),
-    followerCount: new updatableElement('graphFollowCount', 'http://localhost:8080/graph/followerCount', 10000),
-    productCount: new updatableElement('graphProduceCount', 'http://localhost:8080/graph/productCount', 10000),
-    purchaseCount: new updatableElement('graphPurchasesCount', 'http://localhost:8080/graph/purchaseCount', 10000),
+function isNumber(value) {
+    if (typeof value === "string" && value.length) {
+        return !isNaN(value);
+    }
+    return false
 }
-
-const relational = {
-    userCount: new updatableElement('relationalUserCount', 'http://localhost:8080/pg/userCount', 10000),
-    followerCount: new updatableElement('relationalFollowCount', 'http://localhost:8080/pg/followersCount', 10000),
-    productCount: new updatableElement('relationalProductCount', 'http://localhost:8080/pg/productCount', 10000),
-    purchaseCount: new updatableElement('relationalPurchaseCount', 'http://localhost:8080/pg/purchaseCount', 10000),
-}
-
-
-btn.request1.addEventListener('click', onClickBtnRequest1)
-btn.request2.addEventListener('click', onClickBtnRequest2)
-btn.request3.addEventListener('click', onClickBtnRequest3)
 
 
 async function onClickBtnRequest1() {
-    let resPg = await fetch('http://localhost:8080/pg/productSalesFromNetwork/1').then((res) => {
+
+    const userIDRelational = Elements.field_userIDRelational.value.toString()
+    const userIdGraph = Elements.field_userIDGraph.value.toString()
+
+    if (!isNumber(userIDRelational) || !isNumber(userIdGraph)) {
+        alert('UserId are not numbers')
+        return
+    }
+
+
+    let resPg = await fetch('http://localhost:8080/pg/productSalesFromNetwork/' + userIdGraph).then((res) => {
         updateTable('pg-table', res)
     });
-    let resGraph = fetch('http://localhost:8080/graph/productSalesFromNetwork/1').then((res) => {
-      updateTable('graph-table', res)
+    let resGraph = fetch('http://localhost:8080/graph/productSalesFromNetwork/' + userIdGraph).then((res) => {
+        updateTable('graph-table', res)
 
     });
     await Promise.all([resPg, resGraph])
 }
 
 async function onClickBtnRequest2() {
-    let resPg = fetch('http://localhost:8080/pg/specificProductSaleFromNetwork/1/1').then((res) => {
+    const userIDRelational = Elements.field_userIDRelational.value.toString()
+    const userIdGraph = Elements.field_userIDGraph.value.toString()
+    const productIdRelational = Elements.field_productIdRelational.value.toString()
+    const productIdGraph = Elements.field_productIdGraph.value.toString()
+
+
+    if (!isNumber(userIDRelational) || !isNumber(userIdGraph)) {
+        alert('UserId are not numbers')
+        return
+    }
+
+    if (!isNumber(productIdRelational) || !isNumber(productIdGraph)) {
+        alert('ProductId are not Number');
+        return
+    }
+
+
+    let resPg = fetch('http://localhost:8080/pg/specificProductSaleFromNetwork/' + userIDRelational + '/' + productIdRelational).then((res) => {
         updateTable('pg-table', res)
 
     });
-    let resGraph = fetch('http://localhost:8080/graph/productSalesFromNetwork/1/1').then((res) => {
+    let resGraph = fetch('http://localhost:8080/graph/productSalesFromNetwork/' + userIdGraph + '/' + productIdGraph).then((res) => {
         updateTable('graph-table', res)
-    });;
+    });
     await Promise.all([resPg, resGraph])
 }
 
 async function onClickBtnRequest3() {
-    let resPg = fetch('http://localhost:8080/pg/productVirality').then((res) => {
+    const productIdRelational = Elements.field_productIdRelational.value.toString()
+    const productIdGraph = Elements.field_productIdGraph.value.toString()
+
+
+    if (!isNumber(productIdRelational) || !isNumber(productIdGraph)) {
+        alert('ProductId are not Number');
+        return
+    }
+
+
+    let resPg = fetch('http://localhost:8080/pg/productVirality/' + productIdRelational).then((res) => {
         updateTable('pg-table', res)
     });
-    let resGraph = fetch('http://localhost:8080/graph/productVirality').then((res) => {
+    let resGraph = fetch('http://localhost:8080/graph/productVirality/' + productIdGraph).then((res) => {
         updateTable('graph-table', res)
     });
     await Promise.all([resPg, resGraph])
 }
 
-async function updatePgArray(value) {
-    const rep = value.json()
-    console.log("Pg array : " + rep)
-}
-
-function updateGraphArray(res) {
-    console.log("Graph array : " + res)
-
-}
-
-
-
 async function updateTable(tableId, data) {
-    const color = {
-        'pg-table' : '#27b1be',
-        'gaph-table' : '#d9ae0d'
-    }
+
 
     console.log("In updateTable : " + data)
     const jsonData = await data.json()
     const table = document.getElementById(tableId);
     const thead = table.querySelector('thead');
-    thead.style.backgroundColor = color[tableId]
+    thead.style.backgroundColor = tableDetails[tableId].color
+    tableDetails[tableId].time.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+
     const tbody = table.querySelector('tbody');
     // Clear the table header and body
     thead.innerHTML = '';
@@ -139,3 +142,7 @@ async function updateTable(tableId, data) {
     });
 }
 
+
+Elements.btn_query_1.addEventListener('click', onClickBtnRequest1)
+Elements.btn_query_2.addEventListener('click', onClickBtnRequest2)
+Elements.btn_query_3.addEventListener('click', onClickBtnRequest3)
