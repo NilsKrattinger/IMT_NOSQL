@@ -2,7 +2,7 @@ const Elements = {
     btn_query_1: document.getElementById('request1'),
     btn_query_2: document.getElementById('request2'),
     btn_query_3: document.getElementById('request3'),
-    btn_add_user: document.getElementById('AddUsers'),
+    btn_add_user: document.getElementById('AddUser'),
     btn_add_product: document.getElementById('AddProduct'),
     btn_delete_all: document.getElementById('DeleteAll'),
     btn_random_user: document.getElementById('RandomUserID'),
@@ -14,6 +14,8 @@ const Elements = {
     field_batchSize: document.getElementById('batchSize'),
     field_inputNumber: document.getElementById('NumberToInsert'),
     graph_queryTime: document.getElementById('GraphResponseTime'),
+    relationanl_queryTime: document.getElementById('RelationalResponseTime')
+
 
 }
 
@@ -47,7 +49,7 @@ async function onClickBtnRequest1() {
     }
 
 
-    let resPg = await fetch('http://localhost:8080/pg/productSalesFromNetwork/' + userIdGraph).then((res) => {
+    let resPg = await fetch('http://localhost:8080/pg/productSalesFromNetwork/' + userIDRelational).then((res) => {
         updateTable('pg-table', res)
     });
     let resGraph = fetch('http://localhost:8080/graph/productSalesFromNetwork/' + userIdGraph).then((res) => {
@@ -105,10 +107,75 @@ async function onClickBtnRequest3() {
     await Promise.all([resPg, resGraph])
 }
 
+
+async function onClickBtnAddUser() {
+
+    const batchSize = Elements.field_batchSize.value.toString()
+    const total = Elements.field_inputNumber.value.toString()
+
+    if (!isNumber(batchSize) || !isNumber(total)) {
+        alert('UserId are not numbers')
+        return
+    }
+
+    let resPg = await fetch('http://localhost:8080/pg/populateUsers/' + batchSize + '/' + total, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+    }).then(async (res) => {
+        let jsonData = await res.json()
+        Elements.relationanl_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+    });
+    let resGraph = fetch('http://localhost:8080/graph/populateUsers/' + batchSize + '/' + total, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+    }).then(async (res) => {
+        let jsonData = await res.json()
+        Elements.graph_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+    });
+    await Promise.all([resPg, resGraph])
+}
+
+async function onClickBtnAddProduct() {
+
+    const batchSize = Elements.field_batchSize.value.toString()
+    const total = Elements.field_inputNumber.value.toString()
+
+    if (!isNumber(batchSize) || !isNumber(total)) {
+        alert('UserId are not numbers')
+        return
+    }
+
+    let resPg = await fetch('http://localhost:8080/pg/populateProducts/' + batchSize + '/' + total, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+    }).then(async (res) => {
+        let jsonData = await res.json()
+        Elements.relationanl_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+    });
+    let resGraph = fetch('http://localhost:8080/graph/populateProducts/' + batchSize + '/' + total, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+    }).then(async (res) => {
+        let jsonData = await res.json()
+        Elements.relationanl_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+    });
+    await Promise.all([resPg, resGraph])
+}
+
 async function updateTable(tableId, data) {
 
-
-    console.log("In updateTable : " + data)
     const jsonData = await data.json()
     const table = document.getElementById(tableId);
     const thead = table.querySelector('thead');
@@ -146,3 +213,5 @@ async function updateTable(tableId, data) {
 Elements.btn_query_1.addEventListener('click', onClickBtnRequest1)
 Elements.btn_query_2.addEventListener('click', onClickBtnRequest2)
 Elements.btn_query_3.addEventListener('click', onClickBtnRequest3)
+Elements.btn_add_user.addEventListener('click', onClickBtnAddUser)
+Elements.btn_add_product.addEventListener('click', onClickBtnAddProduct)

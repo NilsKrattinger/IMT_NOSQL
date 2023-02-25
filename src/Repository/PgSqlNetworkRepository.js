@@ -86,7 +86,8 @@ async function getProductVirality(productName) {
 async function getUserCount() {
     const start = Date.now();
     const result = await pgPool.query(`
-        SELECT count(*) from users;
+        SELECT count(*)
+        from users;
     `);
     const duration = Date.now() - start;
     let returnValue = {}
@@ -98,7 +99,8 @@ async function getUserCount() {
 async function getProductCount() {
     const start = Date.now();
     const result = await pgPool.query(`
-        SELECT count(*) from products;
+        SELECT count(*)
+        from products;
     `);
     const duration = Date.now() - start;
     let returnValue = {}
@@ -111,7 +113,8 @@ async function getProductCount() {
 async function getFollowersCount() {
     const start = Date.now();
     const result = await pgPool.query(`
-        SELECT count(*) from followers;
+        SELECT count(*)
+        from followers;
     `);
     const duration = Date.now() - start;
     let returnValue = {}
@@ -123,7 +126,8 @@ async function getFollowersCount() {
 async function getPurchasedCount() {
     const start = Date.now();
     const result = await pgPool.query(`
-        SELECT count(*) from purchases;
+        SELECT count(*)
+        from purchases;
     `);
     const duration = Date.now() - start;
     let returnValue = {}
@@ -132,13 +136,69 @@ async function getPurchasedCount() {
     return returnValue;
 }
 
+async function createUsers(userNumber, batchSize) {
+    const TotalNumberOfBatch = Math.trunc(userNumber / batchSize)
+    const RemainingPart = userNumber - (TotalNumberOfBatch * batchSize)
+
+    const start = Date.now();
+    const result = []
+    for (let i = 0; i < TotalNumberOfBatch; i++) {
+        let batch_res = await pgPool.query(`
+           call insert_users($1)
+           `, [batchSize]);
+        result.push(batch_res)
+    }
+
+    if (RemainingPart) {
+        let batch_res = await pgPool.query(`
+        call insert_users($1)
+            `, [RemainingPart]);
+        result.push(batch_res)
+    }
+
+    const duration = Date.now() - start;
+    let returnValue = {}
+    returnValue["Duration"] = duration;
+    returnValue["Data"] = utils.parseRes(result.join());
+    return returnValue;
+}
+
+
+async function createProduct(number, batchSize) {
+    const TotalNumberOfBatch = Math.trunc(number / batchSize)
+    const RemainingPart = number - (TotalNumberOfBatch * batchSize)
+
+    const start = Date.now();
+    const result = []
+    for (let i = 0; i < TotalNumberOfBatch; i++) {
+        let batch_res = await pgPool.query(`
+           call insert_products($1)
+           `, [batchSize]);
+        result.push(batch_res)
+    }
+
+    if (RemainingPart) {
+        let batch_res = await pgPool.query(`
+        call insert_products($1)
+            `, [RemainingPart]);
+        result.push(batch_res)
+    }
+
+    const duration = Date.now() - start;
+    let returnValue = {}
+    returnValue["Duration"] = duration;
+    returnValue["Data"] = utils.parseRes(result.join());
+    return returnValue;
+}
 
 module.exports = {
     getSalesProductByNetwork: getSalesProductByNetwork,
     getSaleForProductByNetwork: getSaleForProductByNetwork,
-    getProductVirality:getProductVirality,
-    getUserCount:getUserCount,
-    getProductCount:getProductCount,
-    getPurchasedCount:getPurchasedCount,
-    getFollowersCount:getFollowersCount
+    getProductVirality: getProductVirality,
+    getUserCount: getUserCount,
+    getProductCount: getProductCount,
+    getPurchasedCount: getPurchasedCount,
+    getFollowersCount: getFollowersCount,
+    createUsers:createUsers,
+    createProduct:createProduct,
 }

@@ -69,7 +69,7 @@ async function getSalesProductByNetwork(userName) {
         try {
             const session = driver.session()
 
-            const result = await session.run('MATCH (n:Person) RETURN COUNT(n)')
+            const result = await session.run('MATCH (n:Person) RETURN COUNT(n) AS count')
             await session.close()
 
             const duration = Date.now() - start;

@@ -22,23 +22,24 @@ class updatableElement {
         window.addEventListener('load', function () {
             setInterval(() => {
                 obj.update(obj)
-            }, 10000);
+            }, obj.freq);
         });
     }
 }
 
 
 
+
 const graph = {
-    userCount: new updatableElement('graphUserCount', 'http://localhost:8080/graph/userCount', 10000),
-    followerCount: new updatableElement('graphFollowCount', 'http://localhost:8080/graph/followerCount', 10000),
-    productCount: new updatableElement('graphProductCount', 'http://localhost:8080/graph/productCount', 10000),
-    purchaseCount: new updatableElement('graphPurchaseCount', 'http://localhost:8080/graph/purchaseCount', 10000),
+    userCount: new updatableElement('graphUserCount', 'http://localhost:8080/graph/userCount', 1000),
+    followerCount: new updatableElement('graphFollowCount', 'http://localhost:8080/graph/followerCount', 1000),
+    productCount: new updatableElement('graphProductCount', 'http://localhost:8080/graph/productCount', 1000),
+    purchaseCount: new updatableElement('graphPurchaseCount', 'http://localhost:8080/graph/purchaseCount', 1000),
 }
 
 const relational = {
-    userCount: new updatableElement('relationalUserCount', 'http://localhost:8080/pg/userCount', 10000),
-    followerCount: new updatableElement('relationalFollowCount', 'http://localhost:8080/pg/followersCount', 10000),
-    productCount: new updatableElement('relationalProductCount', 'http://localhost:8080/pg/productCount', 10000),
-    purchaseCount: new updatableElement('relationalPurchaseCount', 'http://localhost:8080/pg/purchaseCount', 10000),
+    userCount: new updatableElement('relationalUserCount', 'http://localhost:8080/pg/userCount', 1000),
+    followerCount: new updatableElement('relationalFollowCount', 'http://localhost:8080/pg/followersCount', 1000),
+    productCount: new updatableElement('relationalProductCount', 'http://localhost:8080/pg/productCount', 1000),
+    purchaseCount: new updatableElement('relationalPurchaseCount', 'http://localhost:8080/pg/purchaseCount', 1000),
 }

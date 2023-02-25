@@ -1,19 +1,16 @@
 const express = require('express');
-const {createSchema, populateFollowers, populateProducts} = require("../src/utils/pg-utils");
 const router = express.Router();
 const repo = require('../src/Repository/PgSqlNetworkRepository')
 const network = require('../src/model/Network')
 const common = require('../src/model/Common')
 
 // Route to populate the followers table
-router.post('/populateUsers', async (req, res) => {
+router.post('/populateUsers/:batch/:total', async (req, res) => {
     try {
-        const start = Date.now();
-        await populateFollowers();
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const batch = req.params.batch
+        const total = req.params.total
+        const rep = await common.createUsers(repo,total,batch);
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error populating followers table:', err);
         res.status(500).send('Error populating followers table.');
@@ -22,14 +19,12 @@ router.post('/populateUsers', async (req, res) => {
 
 
 // Route to populate the products table
-router.post('/populateProducts', async (req, res) => {
+router.post('/populateProducts/:batch/:total', async (req, res) => {
     try {
-        const start = Date.now();
-        await populateProducts(10);
-        const duration = Date.now() - start;
-        res.set('X-Request-Duration', `${duration}ms`);
-        res.sendStatus(200)
-
+        const batch = req.params.batch
+        const total = req.params.total
+        let rep = await common.createProduct(repo,total,batch);
+        res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error populating products table:', err);
         res.status(500).send('Error populating products table.');
@@ -54,7 +49,7 @@ router.get('/specificProductSaleFromNetwork/:userName/:productName', async (req,
         const userName = req.params.userName
         const productName = req.params.productName
 
-        const rep = await network.getSalesProductByNetwork(repo,userName,productName)
+        const rep = await network.getSaleForProductByNetwork(repo,userName,productName)
         res.send(JSON.stringify(rep))
     } catch (err) {
         console.error('Error getting', err);

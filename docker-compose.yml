@@ -26,7 +26,11 @@ services:
     image: postgres
     restart: always
     volumes:
-      - ./db/postgresql/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./db/postgresql/CreateTable.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./db/postgresql/CreateFollower.sql:/docker-entrypoint-initdb.d/10-create_followers_procedures.sql
+      - ./db/postgresql/CreateInsertPurchases.sql:/docker-entrypoint-initdb.d/20-create_purchases_procedures.sql
+      - ./db/postgresql/CreateInsertUser.sql:/docker-entrypoint-initdb.d/30-create_user_procedures.sql
+      - ./db/postgresql/CreateInsertProduct.sql:/docker-entrypoint-initdb.d/40-create_product_procedures.sql
     networks:
       - devnet
     ports:

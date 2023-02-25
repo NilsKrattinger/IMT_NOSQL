@@ -24,6 +24,7 @@ async function createProcedure() {
                                         end loop;
                                     end;
                                     $$;`));
+
     result.push(await pgPool.query(`CREATE OR REPLACE PROCEDURE create_purchases_relations(start int)
                                       LANGUAGE plpgsql
                                       AS $$
@@ -43,6 +44,7 @@ async function createProcedure() {
                                           end loop;
                                       end;
                                       $$;`));
+
     result.push(await pgPool.query(`CREATE OR REPLACE PROCEDURE insert_users(nb_users int)
                                         LANGUAGE plpgsql
                                         AS $$
@@ -61,6 +63,7 @@ async function createProcedure() {
                                             CALL create_purchases_relations(init_count_user);
                                         end;
                                         $$;`));
+
     result.push(await pgPool.query(`CREATE OR REPLACE PROCEDURE insert_products(nb_products int)
                                     LANGUAGE plpgsql
                                     AS $$
@@ -78,6 +81,7 @@ async function createProcedure() {
                                         ON CONFLICT DO NOTHING;
                                     end;
                                     $$;`));
+
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
