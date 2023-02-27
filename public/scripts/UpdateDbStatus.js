@@ -13,9 +13,10 @@ class updatableElement {
 
     async fetchData(obj) {
         const response = await fetch(obj.url);
+        if (response.ok) {
         const responseObj = await response.json()
         return responseObj.Data[0].count;
-
+        }
     }
 
     setUpUpdate(obj) {
@@ -32,7 +33,7 @@ class updatableElement {
 
 const graph = {
     userCount: new updatableElement('graphUserCount', 'http://localhost:8080/graph/userCount', 1000),
-    followerCount: new updatableElement('graphFollowCount', 'http://localhost:8080/graph/followerCount', 1000),
+    followerCount: new updatableElement('graphFollowCount', 'http://localhost:8080/graph/followersCount', 1000),
     productCount: new updatableElement('graphProductCount', 'http://localhost:8080/graph/productCount', 1000),
     purchaseCount: new updatableElement('graphPurchaseCount', 'http://localhost:8080/graph/purchaseCount', 1000),
 }

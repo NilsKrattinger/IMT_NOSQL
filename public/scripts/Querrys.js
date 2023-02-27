@@ -138,6 +138,7 @@ async function onClickBtnAddUser() {
         let jsonData = await res.json()
         Elements.graph_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
     });
+    console.log('Test')
     await Promise.all([resPg, resGraph])
 }
 
@@ -168,9 +169,12 @@ async function onClickBtnAddProduct() {
         },
         method: "POST",
     }).then(async (res) => {
+        console.log('Test')
         let jsonData = await res.json()
         Elements.relationanl_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
     });
+    console.log('Test2')
+
     await Promise.all([resPg, resGraph])
 }
 

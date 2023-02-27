@@ -125,7 +125,6 @@ function parseRes(res){
         parsedRes.push(parsedObj)
     }
 
-    console.log(parsedRes)
     return parsedRes
 }
 
