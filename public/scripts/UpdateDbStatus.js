@@ -15,7 +15,6 @@ class updatableElement {
         const response = await fetch(obj.url);
         if (response.ok) {
         const responseObj = await response.json()
-            console.log(responseObj)
 
             return responseObj.Data[0].count;
         }

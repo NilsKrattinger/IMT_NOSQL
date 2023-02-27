@@ -195,7 +195,6 @@ async function updateTable(tableId, data) {
 
     // Create table header
     const headerRow = document.createElement('tr');
-    console.log(JSON.stringify(jsonData))
     Object.keys(jsonData.Data[0]).forEach(key => {
         const th = document.createElement('th');
         th.textContent = key;
