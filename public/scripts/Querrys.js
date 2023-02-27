@@ -169,11 +169,13 @@ async function onClickBtnAddProduct() {
         },
         method: "POST",
     }).then(async (res) => {
-        console.log('Test')
         let jsonData = await res.json()
-        Elements.relationanl_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
-    });
-    console.log('Test2')
+        Elements.graph_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+
+    }).catch((e) => {
+        console.log('Erreur ' + e)
+
+    }) ;
 
     await Promise.all([resPg, resGraph])
 }
