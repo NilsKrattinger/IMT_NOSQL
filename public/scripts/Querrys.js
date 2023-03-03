@@ -126,7 +126,7 @@ async function onClickBtnAddUser() {
         method: "POST",
     }).then(async (res) => {
         let jsonData = await res.json()
-        Elements.relationanl_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+        Elements.relationanl_queryTime.innerHTML = "Duration : " + new Date(jsonData.Duration).toISOString().slice(11, 23).toString()
     });
     let resGraph = fetch('http://localhost:8080/graph/populateUsers/' + batchSize + '/' + total, {
         headers: {
@@ -136,7 +136,7 @@ async function onClickBtnAddUser() {
         method: "POST",
     }).then(async (res) => {
         let jsonData = await res.json()
-        Elements.graph_queryTime.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+        Elements.graph_queryTime.innerHTML = "Duration : " + new Date(jsonData.Duration).toISOString().slice(11, 23).toString()
     });
     console.log('Test')
     await Promise.all([resPg, resGraph])
@@ -181,12 +181,14 @@ async function onClickBtnAddProduct() {
 }
 
 async function updateTable(tableId, data) {
+    console.log(data)
 
     const jsonData = await data.json()
     const table = document.getElementById(tableId);
     const thead = table.querySelector('thead');
     thead.style.backgroundColor = tableDetails[tableId].color
-    tableDetails[tableId].time.innerHTML = "Duration : " + jsonData.Duration + " (ms)"
+    tableDetails[tableId].time.innerHTML = "Duration : " + new Date(jsonData.Duration).toISOString().slice(11, 23).toString();
+    console.log('duration : ' + jsonData.Duration)
 
     const tbody = table.querySelector('tbody');
     // Clear the table header and body
@@ -204,6 +206,7 @@ async function updateTable(tableId, data) {
 
     // Create table rows
     jsonData.Data.forEach(item => {
+
         const row = document.createElement('tr');
         Object.values(item).forEach(value => {
             const cell = document.createElement('td');

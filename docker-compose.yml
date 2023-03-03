@@ -31,6 +31,11 @@ services:
       - ./db/postgresql/CreateInsertPurchases.sql:/docker-entrypoint-initdb.d/20-create_purchases_procedures.sql
       - ./db/postgresql/CreateInsertUser.sql:/docker-entrypoint-initdb.d/30-create_user_procedures.sql
       - ./db/postgresql/CreateInsertProduct.sql:/docker-entrypoint-initdb.d/40-create_product_procedures.sql
+      - ./db/postgresql/CreateAdduserV2.sql:/docker-entrypoint-initdb.d/50-create_product_procedures.sql
+      - ./db/postgresql/CreateReset.sql:/docker-entrypoint-initdb.d/60-create_reset.sql
+
+
+
     networks:
       - devnet
     ports:

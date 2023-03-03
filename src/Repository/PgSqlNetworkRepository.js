@@ -28,7 +28,7 @@ async function getSalesProductByNetwork(userId) {
     return returnValue;
 }
 
-async function getSaleForProductByNetwork(userId, productName) {
+async function getSaleForProductByNetwork(userId, productId) {
     const start = Date.now();
     const result = await pgPool.query(`
         WITH RECURSIVE followers_CTE AS (SELECT distinct user_id, follower_id, 1 AS level
@@ -42,13 +42,10 @@ async function getSaleForProductByNetwork(userId, productName) {
 
         SELECT product_id, count(*) as nb_purchase
         from purchases p
-                 JOIN products on p.product_id = id
-        WHERE p.user_id in (SELECT DISTINCT follower_id
-                            FROM followers_CTE)
-          and name = $2
+        WHERE p.product_id = $2
           AND p.user_id <> $1
         group by (product_id);
-    `, [userId, productName]);
+    `, [userId, productId]);
 
     const duration = Date.now() - start;
     let returnValue = {}
@@ -144,14 +141,14 @@ async function createUsers(userNumber, batchSize) {
     const result = []
     for (let i = 0; i < TotalNumberOfBatch; i++) {
         let batch_res = await pgPool.query(`
-           call insert_users($1)
+           call add_followers($1)
            `, [batchSize]);
         result.push(batch_res)
     }
 
     if (RemainingPart) {
         let batch_res = await pgPool.query(`
-        call insert_users($1)
+        call add_followers($1)
             `, [RemainingPart]);
         result.push(batch_res)
     }
@@ -199,6 +196,6 @@ module.exports = {
     getProductCount: getProductCount,
     getPurchasedCount: getPurchasedCount,
     getFollowersCount: getFollowersCount,
-    createUsers:createUsers,
-    createProduct:createProduct,
+    createUsers: createUsers,
+    createProduct: createProduct,
 }
