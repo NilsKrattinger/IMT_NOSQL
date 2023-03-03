@@ -133,26 +133,37 @@ async function getPurchasedCount() {
     return returnValue;
 }
 
-async function createUsers(userNumber, batchSize) {
-    const TotalNumberOfBatch = Math.trunc(userNumber / batchSize)
-    const RemainingPart = userNumber - (TotalNumberOfBatch * batchSize)
+async function batching(usercount,batch_size, total, methode, pgpool) {
+    const TotalNumberOfBatch = Math.trunc(total / batch_size)
+    const RemainingPart = total - (TotalNumberOfBatch * batch_size)
+    let result;
+    const promises = []
 
-    const start = Date.now();
-    const result = []
     for (let i = 0; i < TotalNumberOfBatch; i++) {
-        let batch_res = await pgPool.query(`
-           call add_followers($1)
-           `, [batchSize]);
-        result.push(batch_res)
+        let promise = pgpool.query(`
+           call ` + methode + `($1,$2)
+           `, [parseInt(usercount)+parseInt(batch_size)*i,batch_size]);
+        promises.push(promise)
     }
 
     if (RemainingPart) {
-        let batch_res = await pgPool.query(`
-        call add_followers($1)
-            `, [RemainingPart]);
-        result.push(batch_res)
+        let promise = pgpool.query(`
+       call ` + methode + `($1,$2)
+           `, [parseInt(usercount)+parseInt(total)-RemainingPart,RemainingPart]);
+        promises.push(promise)
     }
 
+    result = await Promise.all(promises)
+    return result
+}
+
+async function createUsers(userNumber, batchSize) {
+    let result = [];
+
+    const userCount =  (await getUserCount()).Data[0].count
+    const start = Date.now();
+    result = result.concat(await batching(userCount,batchSize, userNumber, "add_users", pgPool));
+    result = result.concat(await batching(userCount,batchSize, userNumber, "add_followers_and_purchases", pgPool));
     const duration = Date.now() - start;
     let returnValue = {}
     returnValue["Duration"] = duration;
