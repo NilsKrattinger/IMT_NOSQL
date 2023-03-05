@@ -8,6 +8,8 @@ DECLARE
     nb_follower int = 0;
     nb_purchases integer =1;
     nb_products integer =1;
+    nb_to_insert integer = 0;
+
 BEGIN
     init_count_user := (SELECT COUNT(1) FROM Users);
     counter := init_count_user +1 ;
@@ -23,7 +25,8 @@ BEGIN
 
     while counter <= number_to_insert loop
             nb_follower:= 0;
-            while nb_follower <= random() * 20 loop
+            nb_to_insert:= random() * 20;
+            while nb_follower <= nb_to_insert loop
                     insert into followers (user_id, follower_id) values (counter, GREATEST(random() * (nb_user),1))
                     ON CONFLICT DO NOTHING;
                     nb_follower := nb_follower+1;

@@ -1,13 +1,11 @@
 const {driver} = require('../provider/Neo4J')
 const utils = require('../utils/neo4j-utils')
 
-async function getSalesProductByNetwork(userName) {
+async function getSalesProductByNetwork(userId) {
     const start = Date.now();
     try {
         const session = driver.session()
-        const result = await session.run('MATCH (a:Person{name:$name})-[r1:followedBy *..4]->(b:Person)-[r2:haveBought]->(c:Product) WHERE a<>b WITH DISTINCT a, b, c WITH c, COUNT(c) as d RETURN c, d,',
-            {name: userName}
-        )
+        const result = await session.run('MATCH (a:Person{id:'+userId+'})-[r1:followedBy *..4]->(b:Person)-[r2:haveBought]->(c:Product) WHERE a<>b WITH DISTINCT a, b, c WITH c, COUNT(c) as d RETURN c, d')
         await session.close()
 
         const duration = Date.now() - start;
@@ -24,9 +22,7 @@ async function getSalesProductByNetwork(userName) {
         try {
             const session = driver.session()
 
-            const result = await session.run('MATCH (a:Person{name:$username})-[r1:followedBy *..4]->(b:Person)-[r2:haveBought]->(c:Product {name:$product_name}) WHERE a<>b WITH DISTINCT a, b, c WITH c, COUNT(c) as d RETURN c, d,',
-                {user_name: userName, product_name:productName}
-            )
+            const result = await session.run('MATCH (a:Person{id:'+userId+'})-[r1:followedBy *..4]->(b:Person)-[r2:haveBought]->(c:Product {id:'+productName+'}) WHERE a<>b WITH DISTINCT a, b, c WITH c, COUNT(c) as d RETURN c, d')
             await session.close()
 
             const duration = Date.now() - start;
@@ -47,9 +43,7 @@ async function getSalesProductByNetwork(userName) {
         try {
             const session = driver.session()
 
-            const result = await session.run('MATCH (n:Person)-[:followedBy *$circle_size..$circle_size]->(p:Person)-[:haveBought]->(c:Product {name:$product_name}) WHERE (n)-[:haveBought]->(c) AND n<>p RETURN p',
-                {product_name:productName,circle_size:circleSize}
-            )
+            const result = await session.run('MATCH (n:Person)-[:followedBy * '+circleSize+'..' + circleSize+']->(p:Person)-[:haveBought]->(c:Product {name:'+ productName +'}) WHERE (n)-[:haveBought]->(c) AND n<>p RETURN p',)
             await session.close()
 
             const duration = Date.now() - start;
@@ -143,30 +137,26 @@ async function createUsers(nbUsersToInsert) {
         let session = driver.session()
         result.push(await session.run(`MATCH (p:Person) 
         WITH COUNT(p) as n 
-        UNWIND range(n+1, n+$nbNewUsers) as id
-        CREATE (a:Person {name:id});`,
-            {nbNewUsers: nbUsersToInsert}
-        ))
+        UNWIND range(n+1, n+`+nbUsersToInsert+`) as id
+        CREATE (a:Person {name:id});`))
         result.push(await session.run(`MATCH (p:Person)
         WITH COUNT(p) as n
         MATCH (p:Person)
-        WHERE p.name > n-$nbNewUsers
+        WHERE p.name > n-`+nbUsersToInsert+`
         UNWIND p as i
             WITH i, n
             UNWIND RANGE(0, toInteger(RAND() * 20)) as j
                 WITH i, toInteger(RAND() * n) + 1 as k
                 MATCH (m:Person {name:k})
                 WHERE i<>m AND NOT EXISTS((m)-[:followedBy]->(i))
-                CREATE (m)-[:followedBy]->(i);`,
-            {nbNewUsers: nbUsersToInsert}
-        ))
+                CREATE (m)-[:followedBy]->(i);`))
         await session.close()
 
         session = driver.session()
         result.push(await session.run(`MATCH (p:Person)
         WITH COUNT(p) AS n
         MATCH (p:Person)
-        WHERE p.name > n-$nbNewUsers
+        WHERE p.name > n-`+ nbUsersToInsert +`
         UNWIND p as i
             WITH i
             MATCH (pr:Product)
@@ -175,8 +165,7 @@ async function createUsers(nbUsersToInsert) {
                 WITH i, toInteger(RAND() * n) + 1 as k
                 MATCH (m:Product {name:k})
                 WHERE i<>m AND NOT EXISTS((i)-[:havePurchased]->(m))
-                CREATE (i)-[:havePurchased]->(m);`,
-            {nbNewUsers: nbUsersToInsert}
+                CREATE (i)-[:havePurchased]->(m);`
         ));
         await session.close()
 
